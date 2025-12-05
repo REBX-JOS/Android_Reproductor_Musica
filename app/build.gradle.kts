@@ -67,6 +67,9 @@ dependencies {
     // For ID3 tag reading
     implementation("com.mpatric:mp3agic:0.9.1")
 
+    // Gson for JSON serialization
+    implementation("com.google.code.gson:gson:2.10.1")
+
     // Testing
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:5.7.0")
