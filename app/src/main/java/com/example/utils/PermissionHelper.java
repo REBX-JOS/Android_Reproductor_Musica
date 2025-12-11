@@ -1,4 +1,4 @@
-package com.example.reproductordemsica.utils;
+package com.example.utils;
 
 import android.Manifest;
 import android.app.Activity;
