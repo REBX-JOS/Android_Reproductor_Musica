@@ -22,6 +22,7 @@ import com.example.R;
 import com.example.data.entity.Song;
 import com.example.data.repository.MusicRepository;
 import com.example.service.PlayerService;
+import com.example.utils.QueueManager;
 import com.example.utils.TimeUtils;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -54,6 +55,7 @@ public class PlayerActivity extends AppCompatActivity {
     private Song currentSong;
     private MediaController mediaController;
     private ListenableFuture<MediaController> controllerFuture;
+    private QueueManager queueManager;
     
     private Handler handler;
     private Runnable updateProgressRunnable;
@@ -65,8 +67,9 @@ public class PlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
         
-        // Initialize repository
+        // Initialize repository and queue manager
         repository = new MusicRepository(this);
+        queueManager = new QueueManager(this);
         handler = new Handler(Looper.getMainLooper());
         backgroundExecutor = Executors.newSingleThreadExecutor();
         
@@ -112,6 +115,8 @@ public class PlayerActivity extends AppCompatActivity {
         btnPlayPause.setOnClickListener(v -> togglePlayPause());
         btnPrevious.setOnClickListener(v -> skipToPrevious());
         btnNext.setOnClickListener(v -> skipToNext());
+        btnShuffle.setOnClickListener(v -> toggleShuffle());
+        btnRepeat.setOnClickListener(v -> cycleRepeatMode());
         btnFavorite.setOnClickListener(v -> toggleFavorite());
         
         // Setup SeekBar
@@ -169,6 +174,13 @@ public class PlayerActivity extends AppCompatActivity {
                         }
                         
                         @Override
+                        public void onPlaybackStateChanged(int playbackState) {
+                            if (playbackState == Player.STATE_ENDED) {
+                                runOnUiThread(() -> handleTrackEnded());
+                            }
+                        }
+                        
+                        @Override
                         public void onMediaItemTransition(MediaItem mediaItem, int reason) {
                             // Handle track changes if needed
                         }
@@ -193,12 +205,34 @@ public class PlayerActivity extends AppCompatActivity {
         backgroundExecutor.execute(() -> {
             currentSong = repository.getSongById(songId);
             
+            // Load all songs to create queue
+            List<Song> allSongs = repository.getAllSongsSync();
+            
             runOnUiThread(() -> {
                 if (currentSong != null) {
                     updateUI(currentSong);
+                    
+                    // Set up queue with all songs
+                    if (allSongs != null && !allSongs.isEmpty()) {
+                        int currentIndex = findSongIndex(allSongs, songId);
+                        queueManager.setQueue(allSongs, currentIndex);
+                    }
                 }
+                
+                // Update button states
+                updateShuffleButton();
+                updateRepeatButton();
             });
         });
+    }
+    
+    private int findSongIndex(List<Song> songs, long songId) {
+        for (int i = 0; i < songs.size(); i++) {
+            if (songs.get(i).getId() == songId) {
+                return i;
+            }
+        }
+        return 0;
     }
     
     private void updateUI(Song song) {
@@ -261,14 +295,56 @@ public class PlayerActivity extends AppCompatActivity {
     }
     
     private void skipToNext() {
-        if (mediaController != null && mediaController.hasNextMediaItem()) {
-            mediaController.seekToNext();
+        Song nextSong = queueManager.next();
+        if (nextSong != null) {
+            currentSong = nextSong;
+            updateUI(currentSong);
+            playSong(currentSong);
         }
     }
     
     private void skipToPrevious() {
-        if (mediaController != null && mediaController.hasPreviousMediaItem()) {
-            mediaController.seekToPrevious();
+        Song previousSong = queueManager.previous();
+        if (previousSong != null) {
+            currentSong = previousSong;
+            updateUI(currentSong);
+            playSong(currentSong);
+        }
+    }
+    
+    private void toggleShuffle() {
+        queueManager.toggleShuffle();
+        updateShuffleButton();
+    }
+    
+    private void cycleRepeatMode() {
+        queueManager.cycleRepeatMode();
+        updateRepeatButton();
+    }
+    
+    private void updateShuffleButton() {
+        if (queueManager.isShuffleEnabled()) {
+            btnShuffle.setColorFilter(getColor(R.color.primary));
+        } else {
+            btnShuffle.setColorFilter(getColor(R.color.text_secondary_light));
+        }
+    }
+    
+    private void updateRepeatButton() {
+        int repeatMode = queueManager.getRepeatMode();
+        switch (repeatMode) {
+            case QueueManager.REPEAT_OFF:
+                btnRepeat.setColorFilter(getColor(R.color.text_secondary_light));
+                break;
+            case QueueManager.REPEAT_ALL:
+                btnRepeat.setColorFilter(getColor(R.color.primary));
+                btnRepeat.setImageResource(R.drawable.ic_repeat);
+                break;
+            case QueueManager.REPEAT_ONE:
+                btnRepeat.setColorFilter(getColor(R.color.primary));
+                // For repeat one, we could use a different icon if available
+                btnRepeat.setImageResource(R.drawable.ic_repeat);
+                break;
         }
     }
     
@@ -307,6 +383,15 @@ public class PlayerActivity extends AppCompatActivity {
             long position = mediaController.getCurrentPosition();
             seekBar.setProgress((int) position);
             currentTime.setText(TimeUtils.formatDuration(position));
+        }
+    }
+    
+    private void handleTrackEnded() {
+        Song nextSong = queueManager.next();
+        if (nextSong != null) {
+            currentSong = nextSong;
+            updateUI(currentSong);
+            playSong(currentSong);
         }
     }
     

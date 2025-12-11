@@ -34,6 +34,9 @@ public interface SongDao {
     @Query("SELECT * FROM songs ORDER BY title ASC")
     LiveData<List<Song>> getAllSongs();
     
+    @Query("SELECT * FROM songs ORDER BY title ASC")
+    List<Song> getAllSongsSync();
+    
     @Query("SELECT * FROM songs WHERE id = :songId")
     Song getSongById(long songId);
     
