@@ -156,9 +156,10 @@ public class PlaylistsFragment extends Fragment {
      * Show dialog to confirm playlist deletion.
      */
     private void showDeletePlaylistDialog(Playlist playlist) {
+        String message = getString(R.string.delete_playlist_confirm, playlist.getName());
         new AlertDialog.Builder(requireContext())
             .setTitle(R.string.delete_playlist)
-            .setMessage("¿Eliminar la lista \"" + playlist.getName() + "\"?")
+            .setMessage(message)
             .setPositiveButton(R.string.ok, (dialog, which) -> deletePlaylist(playlist))
             .setNegativeButton(R.string.cancel, null)
             .show();

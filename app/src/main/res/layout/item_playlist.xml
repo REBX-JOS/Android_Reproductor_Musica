@@ -44,7 +44,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
-            android:text="0 canciones"
             android:textSize="14sp"
             android:textColor="@color/text_secondary_light"
             app:layout_constraintStart_toEndOf="@id/playlist_icon"
