@@ -82,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
+        } else if (id == R.id.action_help) {
+            showAddMusicHelp();
+            return true;
         }
         
         return super.onOptionsItemSelected(item);
@@ -161,5 +164,16 @@ public class MainActivity extends AppCompatActivity {
                 ((LibraryFragment) currentFragment).refreshLibrary();
             }
         }
+    }
+    
+    /**
+     * Show dialog with instructions on how to add music.
+     */
+    private void showAddMusicHelp() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.how_to_add_music)
+            .setMessage(R.string.add_music_instructions)
+            .setPositiveButton(R.string.ok, null)
+            .show();
     }
 }

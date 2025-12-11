@@ -14,7 +14,11 @@
     <string name="favorites">Favoritos</string>
     <string name="recent">Recientes</string>
     <string name="no_songs_found">No se encontraron canciones</string>
+    <string name="no_songs_hint">Desliza hacia abajo para actualizar o copia archivos de música a tu dispositivo</string>
     <string name="scanning_library">Escaneando biblioteca…</string>
+    <string name="how_to_add_music">¿Cómo agregar música?</string>
+    <string name="add_music_instructions">Para agregar música:\n\n1. Copia archivos de música (MP3, AAC, FLAC, etc.) a tu dispositivo mediante USB\n2. O descarga música directamente en tu dispositivo\n3. Guarda los archivos en cualquier carpeta (Música, Descargas, etc.)\n4. Desliza hacia abajo en la biblioteca para actualizar\n\nLa aplicación escaneará automáticamente tu dispositivo y mostrará todos los archivos de audio.</string>
+    <string name="refresh_library">Actualizar biblioteca</string>
     
     <!-- Player -->
     <string name="now_playing">Reproduciendo</string>

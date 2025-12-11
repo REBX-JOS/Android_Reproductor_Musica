@@ -34,7 +34,7 @@ public class LibraryFragment extends Fragment {
     
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefresh;
-    private TextView emptyView;
+    private View emptyView;
     private TabLayout tabLayout;
     
     private SongAdapter adapter;
@@ -53,6 +53,9 @@ public class LibraryFragment extends Fragment {
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
         emptyView = view.findViewById(R.id.empty_view);
         tabLayout = view.findViewById(R.id.tab_layout);
+        
+        // Setup help button
+        view.findViewById(R.id.btn_help).setOnClickListener(v -> showAddMusicHelp());
         
         // Setup RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -206,6 +209,18 @@ public class LibraryFragment extends Fragment {
     private void updateEmptyView(boolean isEmpty) {
         emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+    }
+    
+    /**
+     * Show dialog with instructions on how to add music.
+     */
+    private void showAddMusicHelp() {
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle(R.string.how_to_add_music)
+            .setMessage(R.string.add_music_instructions)
+            .setPositiveButton(R.string.ok, null)
+            .setNeutralButton(R.string.refresh_library, (dialog, which) -> refreshLibrary())
+            .show();
     }
     
     @Override
