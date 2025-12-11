@@ -10,6 +10,12 @@
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
+    <!-- Help action -->
+    <item
+        android:id="@+id/action_help"
+        android:title="@string/how_to_add_music"
+        app:showAsAction="never" />
+
     <!-- Settings action -->
     <item
         android:id="@+id/action_settings"
