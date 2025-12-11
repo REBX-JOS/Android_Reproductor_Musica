@@ -40,6 +40,10 @@ public class MusicRepository {
         return songDao.getAllSongs();
     }
     
+    public List<Song> getAllSongsSync() {
+        return songDao.getAllSongsSync();
+    }
+    
     public LiveData<List<Song>> getFavoriteSongs() {
         return songDao.getFavoriteSongs();
     }
