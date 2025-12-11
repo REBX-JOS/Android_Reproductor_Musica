@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Reproductor de Música</string>
+    
+    <!-- General -->
+    <string name="ok">Aceptar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="search">Buscar</string>
+    <string name="settings">Configuración</string>
+    
+    <!-- Library -->
+    <string name="library">Biblioteca</string>
+    <string name="all_songs">Todas</string>
+    <string name="favorites">Favoritos</string>
+    <string name="recent">Recientes</string>
+    <string name="no_songs_found">No se encontraron canciones</string>
+    <string name="scanning_library">Escaneando biblioteca…</string>
+    
+    <!-- Player -->
+    <string name="now_playing">Reproduciendo</string>
+    <string name="play">Reproducir</string>
+    <string name="pause">Pausar</string>
+    <string name="previous">Anterior</string>
+    <string name="next">Siguiente</string>
+    <string name="shuffle">Aleatorio</string>
+    <string name="repeat">Repetir</string>
+    <string name="repeat_off">Repetir: Desactivado</string>
+    <string name="repeat_all">Repetir: Todas</string>
+    <string name="repeat_one">Repetir: Una</string>
+    <string name="add_to_favorites">Agregar a favoritos</string>
+    <string name="remove_from_favorites">Quitar de favoritos</string>
+    
+    <!-- Queue -->
+    <string name="queue">Cola de reproducción</string>
+    <string name="clear_queue">Limpiar cola</string>
+    <string name="queue_empty">La cola está vacía</string>
+    
+    <!-- Playlists -->
+    <string name="playlists">Listas de reproducción</string>
+    <string name="create_playlist">Crear lista</string>
+    <string name="playlist_name">Nombre de la lista</string>
+    <string name="add_to_playlist">Agregar a lista</string>
+    <string name="remove_from_playlist">Quitar de lista</string>
+    <string name="delete_playlist">Eliminar lista</string>
+    <string name="rename_playlist">Renombrar lista</string>
+    
+    <!-- Settings -->
+    <string name="theme">Tema</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Oscuro</string>
+    <string name="theme_system">Sistema</string>
+    <string name="audio_folders">Carpetas de audio</string>
+    <string name="scan_library">Escanear biblioteca</string>
+    <string name="cache_settings">Configuración de caché</string>
+    <string name="clear_cache">Limpiar caché</string>
+    
+    <!-- Permissions -->
+    <string name="permission_required">Permiso requerido</string>
+    <string name="storage_permission_rationale">Esta aplicación necesita acceso al almacenamiento para leer tus archivos de música.</string>
+    <string name="grant_permission">Conceder permiso</string>
+    <string name="permission_denied">Permiso denegado. No se pueden cargar canciones.</string>
+    <string name="notification_permission_rationale">Esta aplicación necesita permiso para mostrar notificaciones con los controles de reproducción.</string>
+    
+    <!-- Errors -->
+    <string name="error_loading_song">Error al cargar la canción</string>
+    <string name="error_playback">Error durante la reproducción</string>
+    <string name="unknown_artist">Artista desconocido</string>
+    <string name="unknown_album">Álbum desconocido</string>
+    <string name="unknown_title">Título desconocido</string>
+    
+    <!-- Notification -->
+    <string name="notification_channel_name">Reproductor de música</string>
+    <string name="notification_channel_description">Controles de reproducción de música</string>
+</resources>

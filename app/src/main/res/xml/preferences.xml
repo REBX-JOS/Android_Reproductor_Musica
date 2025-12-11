@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="@string/theme"
+        android:key="theme_category">
+
+        <ListPreference
+            android:key="theme_mode"
+            android:title="@string/theme"
+            android:entries="@array/theme_entries"
+            android:entryValues="@array/theme_values"
+            android:defaultValue="system"
+            android:summary="%s" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/library"
+        android:key="library_category">
+
+        <Preference
+            android:key="scan_library"
+            android:title="@string/scan_library"
+            android:summary="@string/scanning_library" />
+
+        <Preference
+            android:key="audio_folders"
+            android:title="@string/audio_folders"
+            android:summary="Configure audio scan locations" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/cache_settings"
+        android:key="cache_category">
+
+        <Preference
+            android:key="clear_cache"
+            android:title="@string/clear_cache"
+            android:summary="Clear cached album art and metadata" />
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>
