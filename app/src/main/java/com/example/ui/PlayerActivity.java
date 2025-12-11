@@ -26,6 +26,8 @@ import com.example.utils.TimeUtils;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Activity for playing music with full playback controls.
@@ -56,6 +58,7 @@ public class PlayerActivity extends AppCompatActivity {
     private Handler handler;
     private Runnable updateProgressRunnable;
     private boolean isUserSeeking = false;
+    private Executor backgroundExecutor;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,7 @@ public class PlayerActivity extends AppCompatActivity {
         // Initialize repository
         repository = new MusicRepository(this);
         handler = new Handler(Looper.getMainLooper());
+        backgroundExecutor = Executors.newSingleThreadExecutor();
         
         // Initialize views
         initializeViews();
@@ -177,11 +181,11 @@ public class PlayerActivity extends AppCompatActivity {
             } catch (ExecutionException | InterruptedException e) {
                 Log.e(TAG, "Error connecting to MediaController", e);
             }
-        }, Runnable::run);
+        }, backgroundExecutor);
     }
     
     private void loadSongData(long songId) {
-        new Thread(() -> {
+        backgroundExecutor.execute(() -> {
             currentSong = repository.getSongById(songId);
             
             runOnUiThread(() -> {
@@ -189,7 +193,7 @@ public class PlayerActivity extends AppCompatActivity {
                     updateUI(currentSong);
                 }
             });
-        }).start();
+        });
     }
     
     private void updateUI(Song song) {
@@ -259,8 +263,9 @@ public class PlayerActivity extends AppCompatActivity {
         if (currentSong != null) {
             boolean newState = !currentSong.isFavorite();
             currentSong.setFavorite(newState);
-            repository.updateFavoriteStatus(currentSong.getId(), newState);
             updateFavoriteButton(newState);
+            // Run database update on background thread
+            repository.updateFavoriteStatus(currentSong.getId(), newState);
         }
     }
     
@@ -298,6 +303,11 @@ public class PlayerActivity extends AppCompatActivity {
         // Release MediaController
         if (controllerFuture != null) {
             MediaController.releaseFuture(controllerFuture);
+        }
+        
+        // Shutdown executor
+        if (backgroundExecutor instanceof java.util.concurrent.ExecutorService) {
+            ((java.util.concurrent.ExecutorService) backgroundExecutor).shutdown();
         }
     }
     
