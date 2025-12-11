@@ -1,10 +1,10 @@
-package com.example.reproductordemsica.ui;
+package com.example.ui;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.reproductordemsica.R;
+import com.example.R;
 
 /**
  * Activity for playing music with full playback controls.

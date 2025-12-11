@@ -1,4 +1,4 @@
-package com.example.reproductordemsica.ui;
+package com.example.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,8 +8,8 @@ import android.os.Looper;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.reproductordemsica.R;
-import com.example.reproductordemsica.utils.PermissionHelper;
+import com.example.R;
+import com.example.utils.PermissionHelper;
 
 /**
  * Splash screen shown on app launch.

@@ -1,4 +1,4 @@
-package com.example.reproductordemsica.utils;
+package com.example.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -7,8 +7,8 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.example.reproductordemsica.data.entity.Song;
-import com.example.reproductordemsica.data.repository.MusicRepository;
+import com.example.data.entity.Song;
+import com.example.data.repository.MusicRepository;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
 

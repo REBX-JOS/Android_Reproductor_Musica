@@ -1,4 +1,4 @@
-package com.example.reproductordemsica.ui;
+package com.example.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.reproductordemsica.R;
+import com.example.R;
 
 /**
  * Fragment displaying user playlists.

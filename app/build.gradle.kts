@@ -3,15 +3,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.android_reproductor_musica"
-    compileSdk {
-        version = release(36)
-    }
+    namespace = "com.example"
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.android_reproductor_musica"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 

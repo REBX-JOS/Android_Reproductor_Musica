@@ -1,9 +1,9 @@
-package com.example.reproductordemsica.utils;
+package com.example.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.reproductordemsica.data.entity.Song;
+import com.example.data.entity.Song;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

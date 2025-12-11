@@ -1,12 +1,12 @@
-package com.example.reproductordemsica.utils;
+package com.example.utils;
 
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.reproductordemsica.data.entity.Playlist;
-import com.example.reproductordemsica.data.entity.Song;
-import com.example.reproductordemsica.data.repository.MusicRepository;
+import com.example.data.entity.Playlist;
+import com.example.data.entity.Song;
+import com.example.data.repository.MusicRepository;
 
 import java.util.List;
 
