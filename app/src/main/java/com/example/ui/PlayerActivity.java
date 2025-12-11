@@ -26,7 +26,7 @@ import com.example.utils.TimeUtils;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -58,7 +58,7 @@ public class PlayerActivity extends AppCompatActivity {
     private Handler handler;
     private Runnable updateProgressRunnable;
     private boolean isUserSeeking = false;
-    private Executor backgroundExecutor;
+    private java.util.concurrent.ExecutorService backgroundExecutor;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,28 +155,33 @@ public class PlayerActivity extends AppCompatActivity {
         
         controllerFuture.addListener(() -> {
             try {
-                mediaController = controllerFuture.get();
+                MediaController controller = controllerFuture.get();
                 
-                // Add listener for playback state changes
-                mediaController.addListener(new Player.Listener() {
-                    @Override
-                    public void onIsPlayingChanged(boolean isPlaying) {
-                        runOnUiThread(() -> updatePlayPauseButton(isPlaying));
+                // Assign on UI thread to ensure thread safety
+                runOnUiThread(() -> {
+                    mediaController = controller;
+                
+                    // Add listener for playback state changes
+                    mediaController.addListener(new Player.Listener() {
+                        @Override
+                        public void onIsPlayingChanged(boolean isPlaying) {
+                            runOnUiThread(() -> updatePlayPauseButton(isPlaying));
+                        }
+                        
+                        @Override
+                        public void onMediaItemTransition(MediaItem mediaItem, int reason) {
+                            // Handle track changes if needed
+                        }
+                    });
+                    
+                    // Play the current song
+                    if (currentSong != null) {
+                        playSong(currentSong);
                     }
                     
-                    @Override
-                    public void onMediaItemTransition(MediaItem mediaItem, int reason) {
-                        // Handle track changes if needed
-                    }
+                    // Start progress updates
+                    handler.post(updateProgressRunnable);
                 });
-                
-                // Play the current song
-                if (currentSong != null) {
-                    playSong(currentSong);
-                }
-                
-                // Start progress updates
-                handler.post(updateProgressRunnable);
                 
             } catch (ExecutionException | InterruptedException e) {
                 Log.e(TAG, "Error connecting to MediaController", e);
@@ -220,8 +225,16 @@ public class PlayerActivity extends AppCompatActivity {
     }
     
     private void playSong(Song song) {
-        if (mediaController == null || song == null || song.getPath() == null) {
-            Log.e(TAG, "Cannot play song: mediaController or song is null");
+        if (mediaController == null) {
+            Log.e(TAG, "Cannot play song: mediaController is null");
+            return;
+        }
+        if (song == null) {
+            Log.e(TAG, "Cannot play song: song is null");
+            return;
+        }
+        if (song.getPath() == null) {
+            Log.e(TAG, "Cannot play song: song path is null");
             return;
         }
         
@@ -261,11 +274,15 @@ public class PlayerActivity extends AppCompatActivity {
     
     private void toggleFavorite() {
         if (currentSong != null) {
+            final long songId = currentSong.getId();
             boolean newState = !currentSong.isFavorite();
             currentSong.setFavorite(newState);
             updateFavoriteButton(newState);
             // Run database update on background thread
-            repository.updateFavoriteStatus(currentSong.getId(), newState);
+            final boolean finalNewState = newState;
+            backgroundExecutor.execute(() -> 
+                repository.updateFavoriteStatus(songId, finalNewState)
+            );
         }
     }
     
@@ -306,8 +323,8 @@ public class PlayerActivity extends AppCompatActivity {
         }
         
         // Shutdown executor
-        if (backgroundExecutor instanceof java.util.concurrent.ExecutorService) {
-            ((java.util.concurrent.ExecutorService) backgroundExecutor).shutdown();
+        if (backgroundExecutor != null) {
+            backgroundExecutor.shutdown();
         }
     }
     
