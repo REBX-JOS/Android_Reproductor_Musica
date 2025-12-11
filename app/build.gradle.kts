@@ -34,26 +34,34 @@ android {
 dependencies {
     // AndroidX Core
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.10.0")
+    implementation("com.google.android.material:material:1.11.0")  // Actualizado
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.preference:preference:1.2.1")
 
-    // Lifecycle components
-    implementation("androidx.lifecycle:lifecycle-viewmodel:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-livedata:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-runtime:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-service:2.6.2")
+    // SWIPE REFRESH LAYOUT - AÑADIR ESTA
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    // FRAGMENT - AÑADIR ESTA
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
+
+    // Lifecycle components (actualizadas)
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.7.0")  // Actualizado
+    implementation("androidx.lifecycle:lifecycle-livedata:2.7.0")   // Actualizado
+    implementation("androidx.lifecycle:lifecycle-runtime:2.7.0")    // Actualizado
+    implementation("androidx.lifecycle:lifecycle-service:2.7.0")    // Actualizado
 
     // Room database
-    implementation("androidx.room:room-runtime:2.6.0")
-    annotationProcessor("androidx.room:room-compiler:2.6.0")
+    implementation("androidx.room:room-runtime:2.6.1")  // Actualizado a 2.6.1
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
 
     // ExoPlayer for media playback
     implementation("androidx.media3:media3-exoplayer:1.2.0")
     implementation("androidx.media3:media3-session:1.2.0")
     implementation("androidx.media3:media3-ui:1.2.0")
+    // AÑADE ESTA TAMBIÉN:
+    implementation("androidx.media3:media3-common:1.2.0")
 
     // Glide for image loading
     implementation("com.github.bumptech.glide:glide:4.16.0")

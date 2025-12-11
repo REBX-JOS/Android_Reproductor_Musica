@@ -31,31 +31,31 @@ import java.util.List;
  * Displays a persistent notification with playback controls.
  */
 public class PlayerService extends MediaSessionService {
-    
+
     private static final String TAG = "PlayerService";
     private static final String CHANNEL_ID = "music_playback_channel";
     private static final int NOTIFICATION_ID = 1;
-    
+
     private ExoPlayer player;
     private MediaSession mediaSession;
     private QueueManager queueManager;
     private MusicRepository repository;
-    
+
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "Service created");
-        
+
         // Initialize components
         queueManager = new QueueManager(this);
         repository = new MusicRepository(this);
-        
+
         // Create notification channel
         createNotificationChannel();
-        
+
         // Initialize ExoPlayer
         player = new ExoPlayer.Builder(this).build();
-        
+
         // Setup player listeners
         player.addListener(new Player.Listener() {
             @Override
@@ -65,17 +65,17 @@ public class PlayerService extends MediaSessionService {
                 }
                 updateNotification();
             }
-            
+
             @Override
             public void onIsPlayingChanged(boolean isPlaying) {
                 updateNotification();
-                
+
                 // Save playback position periodically
                 if (isPlaying) {
                     savePlaybackPosition();
                 }
             }
-            
+
             @Override
             public void onPositionDiscontinuity(
                     Player.PositionInfo oldPosition,
@@ -84,49 +84,49 @@ public class PlayerService extends MediaSessionService {
                 savePlaybackPosition();
             }
         });
-        
+
         // Create MediaSession
         mediaSession = new MediaSession.Builder(this, player)
                 .setCallback(new MediaSessionCallback())
                 .build();
-        
+
         // Restore queue and start playback if there was a song playing
         restoreState();
     }
-    
+
     @Nullable
     @Override
     public MediaSession onGetSession(MediaSession.ControllerInfo controllerInfo) {
         return mediaSession;
     }
-    
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Start as foreground service
         startForeground(NOTIFICATION_ID, createNotification());
         return super.onStartCommand(intent, flags, startId);
     }
-    
+
     @Override
     public void onDestroy() {
         // Save current state
         savePlaybackPosition();
-        
+
         // Release resources
         if (mediaSession != null) {
             mediaSession.release();
             mediaSession = null;
         }
-        
+
         if (player != null) {
             player.release();
             player = null;
         }
-        
+
         super.onDestroy();
         Log.d(TAG, "Service destroyed");
     }
-    
+
     /**
      * Create notification channel for Android O and above.
      */
@@ -140,20 +140,20 @@ public class PlayerService extends MediaSessionService {
             channel.setDescription(getString(R.string.notification_channel_description));
             channel.setShowBadge(false);
             channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-            
+
             NotificationManager manager = getSystemService(NotificationManager.class);
             if (manager != null) {
                 manager.createNotificationChannel(channel);
             }
         }
     }
-    
+
     /**
      * Create the notification for foreground service.
      */
     private Notification createNotification() {
         Song currentSong = queueManager.getCurrentSong();
-        
+
         // Create intent to open the app
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -163,7 +163,7 @@ public class PlayerService extends MediaSessionService {
                 intent,
                 PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
         );
-        
+
         // Build notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_music_note)
@@ -175,19 +175,16 @@ public class PlayerService extends MediaSessionService {
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setCategory(NotificationCompat.CATEGORY_SERVICE);
-        
-        // Add media style with MediaSession
-        if (mediaSession != null) {
-            androidx.media3.session.MediaNotification.ActionFactory actionFactory =
-                    (mediaSession1, customActions) -> {
-                        // Use default actions
-                        return null;
-                    };
-        }
-        
+
+        // If you want to add media style / actions, do it here.
+        // Removed the invalid/unused lambda that caused the earlier compile error.
+        // Example placeholder (you'll need to adapt to media3 APIs and tokens):
+        // builder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
+        //         .setShowActionsInCompactView(0 /* index of action(s) */));
+
         return builder.build();
     }
-    
+
     /**
      * Update the notification with current playback state.
      */
@@ -197,7 +194,7 @@ public class PlayerService extends MediaSessionService {
             manager.notify(NOTIFICATION_ID, createNotification());
         }
     }
-    
+
     /**
      * Handle when a track ends.
      */
@@ -210,7 +207,7 @@ public class PlayerService extends MediaSessionService {
             player.pause();
         }
     }
-    
+
     /**
      * Play a specific song.
      */
@@ -219,25 +216,25 @@ public class PlayerService extends MediaSessionService {
             Log.e(TAG, "Cannot play null song");
             return;
         }
-        
+
         try {
             MediaItem mediaItem = MediaItem.fromUri(song.getPath());
             player.setMediaItem(mediaItem);
             player.prepare();
-            
+
             // Restore playback position if available
             if (song.getPlaybackPosition() > 0) {
                 player.seekTo(song.getPlaybackPosition());
             }
-            
+
             player.play();
             updateNotification();
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Error playing song: " + e.getMessage());
         }
     }
-    
+
     /**
      * Save current playback position to database.
      */
@@ -249,7 +246,7 @@ public class PlayerService extends MediaSessionService {
             repository.updatePlaybackPosition(currentSong.getId(), position, timestamp);
         }
     }
-    
+
     /**
      * Restore previous playback state.
      */
@@ -262,27 +259,24 @@ public class PlayerService extends MediaSessionService {
             player.pause();
         }
     }
-    
+
     /**
      * MediaSession callback for handling media button events.
      */
     private class MediaSessionCallback implements MediaSession.Callback {
-        
+
         @Override
         public MediaSession.ConnectionResult onConnect(
                 MediaSession session,
                 MediaSession.ControllerInfo controller) {
             return MediaSession.Callback.super.onConnect(session, controller);
         }
-        
-        @Override
-        public void onPlaybackResumption(
-                MediaSession mediaSession,
-                MediaSession.ControllerInfo controller) {
-            // Handle playback resumption
-        }
+
+        // Note: onPlaybackResumption signature changed in newer media3 versions to return a ListenableFuture.
+        // We removed the old void override. If you need to support playback resumption, implement the
+        // new signature and return an appropriate ListenableFuture<MediaItemsWithStartPosition>.
     }
-    
+
     /**
      * Public API for controlling playback from activities.
      */
