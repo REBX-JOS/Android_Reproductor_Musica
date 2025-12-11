@@ -2,6 +2,7 @@ package com.example.data.entity;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 
 /**
@@ -27,6 +28,7 @@ public class PlaylistSong {
     private long songId;
     private int position;  // Order within playlist
 
+    @Ignore
     public PlaylistSong() {}
 
     public PlaylistSong(long playlistId, long songId, int position) {
