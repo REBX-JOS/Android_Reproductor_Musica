@@ -171,7 +171,7 @@ public class PlaylistsFragment extends Fragment {
     private void createPlaylist(String name) {
         Playlist playlist = new Playlist();
         playlist.setName(name);
-        playlist.setCreatedDate(System.currentTimeMillis());
+        playlist.setDateCreated(System.currentTimeMillis());
         
         repository.insertPlaylist(playlist);
         Toast.makeText(getContext(), R.string.playlist_created, Toast.LENGTH_SHORT).show();
