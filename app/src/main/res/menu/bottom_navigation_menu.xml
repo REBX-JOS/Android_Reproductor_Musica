@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/nav_home"
-        android:icon="@drawable/ic_music_note"
-        android:title="Home" />
-
-    <item
-        android:id="@+id/nav_music"
+        android:id="@+id/nav_library"
         android:icon="@drawable/ic_queue_music"
-        android:title="Music" />
+        android:title="@string/library" />
 
     <item
         android:id="@+id/nav_playlists"
         android:icon="@drawable/ic_album"
-        android:title="Playlists" />
+        android:title="@string/playlists" />
 
     <item
         android:id="@+id/nav_settings"
         android:icon="@drawable/ic_settings"
-        android:title="Settings" />
+        android:title="@string/settings" />
 </menu>
