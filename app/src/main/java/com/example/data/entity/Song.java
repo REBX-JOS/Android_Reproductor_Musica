@@ -1,13 +1,14 @@
 package com.example.data.entity;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 /**
  * Entity representing a song in the music library.
  * Stores metadata extracted from audio files including ID3 tags.
  */
-@Entity(tableName = "songs")
+@Entity(tableName = "songs", indices = {@Index(value = "path", unique = true)})
 public class Song {
     @PrimaryKey(autoGenerate = true)
     private long id;

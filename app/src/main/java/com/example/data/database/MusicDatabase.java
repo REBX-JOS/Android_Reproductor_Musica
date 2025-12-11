@@ -19,7 +19,7 @@ import com.example.data.entity.Song;
  */
 @Database(
     entities = {Song.class, Playlist.class, PlaylistSong.class},
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 public abstract class MusicDatabase extends RoomDatabase {
